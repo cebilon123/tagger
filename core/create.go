@@ -2,10 +2,29 @@ package core
 
 import "strings"
 
+type TagType int
+
+func (t TagType) String() string {
+	return [...]string{"form", "input", "div", "button", "img", "video", "p", ""}[t]
+}
+
+const (
+	Form TagType = iota
+	Input
+	Div
+	Button
+	Image
+	Video
+	Paragraph
+	Plain
+)
+
 //Creator represents object which can be rendered into html string
 //e.g. <div>tagger</div>.
 type Creator interface {
 	Render() string
+	GetChildren() []Creator
+	GetParams() []Param
 }
 
 type Param struct {
@@ -17,14 +36,20 @@ func (p Param) String() string {
 	return p.Key + "=" + "\"" + p.Value + "\""
 }
 
-//Form represents html form.
-type Form struct {
-	children []Creator
+type Tag struct {
+	Type     TagType
+	Value    string
+	children []Tag
 	params   []Param
 }
 
-func (f Form) String() string {
-	html := "<Form"
+func (f Tag) String() string {
+	//If tag is of type plain, just return its value
+	if f.Type == Plain {
+		return f.Value
+	}
+
+	html := "<" + f.Type.String()
 
 	stringifyParams := make([]string, 0)
 	for _, param := range f.params {
@@ -40,6 +65,8 @@ func (f Form) String() string {
 		html += ">"
 	}
 
+	html += "\n"
+
 	for i := range f.children {
 		child := f.children[i]
 
@@ -47,14 +74,19 @@ func (f Form) String() string {
 		html += child.Render() + "\n"
 	}
 
-	if f.children != nil || len(f.children) > 0 {
-		html += "\n"
+	if len(f.Value) > 0 {
+		html += f.Value
 	}
-	html += "</Form>"
+
+	//If there are children append html with new line
+	//if f.children != nil || len(f.children) > 0 {
+	//	html += "\n"
+	//}
+	html += "</" + f.Type.String() + ">"
 
 	return html
 }
 
-func (f Form) Render() string {
+func (f Tag) Render() string {
 	return f.String()
 }

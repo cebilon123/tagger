@@ -2,9 +2,11 @@ package core
 
 import "testing"
 
-func TestForm_String(t *testing.T) {
+func TestTag_Render(t *testing.T) {
 	type fields struct {
-		children []Creator
+		Type     TagType
+		Value    string
+		children []Tag
 		params   []Param
 	}
 	tests := []struct {
@@ -12,31 +14,55 @@ func TestForm_String(t *testing.T) {
 		fields fields
 		want   string
 	}{
-		{name: "ValidParameters_NoneChildren_returnsForm", fields: fields{
-			children: nil,
-			params: []Param{
-				{Key: "class", Value: "form"},
+		{name: "Form_WithInputAndParagraph", fields: fields{
+			Type:     Form,
+			Value:    "",
+			children: []Tag{
+				{
+					Type:     Paragraph,
+					Value:    "Hello text",
+					children: nil,
+					params: []Param{
+						{
+							Key:   "class",
+							Value: "paragraph-extended",
+						},
+					},
+				},
+				{
+					Type:     Input,
+					Value:    "",
+					children: nil,
+					params: []Param{
+						{
+							Key:   "class",
+							Value: "input-class",
+						},
+						{
+							Key:   "body",
+							Value: "vr.input",
+						},
+					},
+				},
 			},
-		}, want: "<Form class=\"form\"></Form>"},
-		{name: "ValidParameters_MultiValueInParam_NoneChildren_returnsForm", fields: fields{
-			children: nil,
 			params: []Param{
-				{Key: "class", Value: "form vtb-form new-line"},
+				{
+					Key:   "class",
+					Value: "form form-expanded form-hello",
+				},
 			},
-		}, want: "<Form class=\"form vtb-form new-line\"></Form>"},
-		{name: "NoneParameters_NoneChildren_ReturnEmptyForm", fields: fields{
-			children: nil,
-			params: nil,
-		}, want: "<Form></Form>"},
+		}, want: "<form class=\"form form-expanded form-hello\">\n<p class=\"paragraph-extended\">\nHello text</p>\n<input class=\"input-class\", body=\"vr.input\">\n</input>\n</form>"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			f := Form{
+			f := Tag{
+				Type:     tt.fields.Type,
+				Value:    tt.fields.Value,
 				children: tt.fields.children,
 				params:   tt.fields.params,
 			}
-			if got := f.String(); got != tt.want {
-				t.Errorf("String() = %v, want %v", got, tt.want)
+			if got := f.Render(); got != tt.want {
+				t.Errorf("Render() = %v, want %v", got, tt.want)
 			}
 		})
 	}
