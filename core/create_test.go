@@ -1,4 +1,4 @@
-package tagger
+package core
 
 import "testing"
 
@@ -12,12 +12,22 @@ func TestForm_String(t *testing.T) {
 		fields fields
 		want   string
 	}{
-		{name: "ValidParameters_NoneChildren", fields: fields{
+		{name: "ValidParameters_NoneChildren_returnsForm", fields: fields{
 			children: nil,
 			params: []Param{
 				{Key: "class", Value: "form"},
 			},
 		}, want: "<Form class=\"form\"></Form>"},
+		{name: "ValidParameters_MultiValueInParam_NoneChildren_returnsForm", fields: fields{
+			children: nil,
+			params: []Param{
+				{Key: "class", Value: "form vtb-form new-line"},
+			},
+		}, want: "<Form class=\"form vtb-form new-line\"></Form>"},
+		{name: "NoneParameters_NoneChildren_ReturnEmptyForm", fields: fields{
+			children: nil,
+			params: nil,
+		}, want: "<Form></Form>"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

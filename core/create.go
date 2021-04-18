@@ -1,4 +1,4 @@
-package tagger
+package core
 
 import "strings"
 
@@ -32,7 +32,13 @@ func (f Form) String() string {
 	}
 
 	params := strings.Join(stringifyParams, ", ")
-	html += " " + params + ">"
+
+	//If there is no params append html without white space
+	if len(params) > 0 {
+		html += " " + params + ">"
+	} else {
+		html += ">"
+	}
 
 	for i := range f.children {
 		child := f.children[i]
@@ -41,7 +47,10 @@ func (f Form) String() string {
 		html += child.Render() + "\n"
 	}
 
-	html += "\n" + "</Form>"
+	if f.children != nil || len(f.children) > 0 {
+		html += "\n"
+	}
+	html += "</Form>"
 
 	return html
 }
