@@ -51,7 +51,7 @@ func TestTag_Render(t *testing.T) {
 					Value: "form form-expanded form-hello",
 				},
 			},
-		}, want: "<form class=\"form form-expanded form-hello\">\n<p class=\"paragraph-extended\">\nHello text</p>\n<input class=\"input-class\", body=\"vr.input\">\n</input>\n</form>"},
+		}, want: "<form class=\"form form-expanded form-hello\">\n<p class=\"paragraph-extended\">\nHello text</p>\n<input class=\"input-class\" body=\"vr.input\">\n</input>\n</form>"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

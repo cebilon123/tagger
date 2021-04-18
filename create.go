@@ -23,8 +23,6 @@ const (
 //e.g. <div>tagger</div>.
 type Creator interface {
 	Render() string
-	GetChildren() []Creator
-	GetParams() []Param
 }
 
 type Param struct {
@@ -56,7 +54,7 @@ func (f Tag) String() string {
 		stringifyParams = append(stringifyParams, param.String())
 	}
 
-	params := strings.Join(stringifyParams, ", ")
+	params := strings.Join(stringifyParams, " ")
 
 	//If there is no params append html without white space
 	if len(params) > 0 {
@@ -78,10 +76,6 @@ func (f Tag) String() string {
 		html += f.Value
 	}
 
-	//If there are children append html with new line
-	//if f.children != nil || len(f.children) > 0 {
-	//	html += "\n"
-	//}
 	html += "</" + f.Type.String() + ">"
 
 	return html
