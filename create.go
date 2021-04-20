@@ -37,8 +37,8 @@ func (p Param) String() string {
 type Tag struct {
 	Type     TagType
 	Value    string
-	children []Tag
-	params   []Param
+	Children []Tag
+	Params   []Param
 }
 
 func (f Tag) String() string {
