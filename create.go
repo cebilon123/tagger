@@ -50,7 +50,7 @@ func (f Tag) String() string {
 	html := "<" + f.Type.String()
 
 	stringifyParams := make([]string, 0)
-	for _, param := range f.params {
+	for _, param := range f.Params {
 		stringifyParams = append(stringifyParams, param.String())
 	}
 
@@ -65,8 +65,8 @@ func (f Tag) String() string {
 
 	html += "\n"
 
-	for i := range f.children {
-		child := f.children[i]
+	for i := range f.Children {
+		child := f.Children[i]
 
 		//append with rendered child and new line
 		html += child.Render() + "\n"
